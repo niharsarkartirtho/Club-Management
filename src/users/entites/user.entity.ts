@@ -1,0 +1,37 @@
+import { Entity,PrimaryGeneratedColumn,Column,CreateDateColumn } from 'typeorm';
+
+export enum Role {
+  ADMIN = 'ADMIN',
+  STUDENT = 'STUDENT',
+}
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ name: 'password_hash', select: false })
+  password: string;
+
+  @Column({ name: 'student_id', unique: true })
+  studentId: string;
+
+  @Column()
+  department: string;
+
+  @Column({ type: 'enum', enum: Role, default: Role.STUDENT })
+  role: Role;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+ // Relationships ache membership ar Registration table  ar sath a
+
+
+}
