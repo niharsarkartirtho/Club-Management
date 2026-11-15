@@ -1,17 +1,33 @@
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+} from 'typeorm';
 
-@Entity('attendances')
+@Entity('attendance')
 export class Attendance {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @Column({ type: 'uuid' })
-    registration_id: string;
+    @Column({
+        name: 'registration_id',
+        type: 'varchar',
+        nullable: true,
+    })
+    registrationId: string;
 
-    @Column({ type: 'uuid' })
-    checked_in_by: string;
+    @Column({
+        name: 'checked_in_by',
+        type: 'varchar',
+        nullable: true,
+    })
+    checkedInBy: string;
 
-    @Column({ type: 'timestamp' })
-    checked_in_at: Date;
+    @CreateDateColumn({
+        name: 'checked_in_at',
+        type: 'timestamp',
+    })
+    checkedInAt: Date;
 }
