@@ -6,9 +6,10 @@ import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AnnouncementsModule } from './announcements/announcements.module.js';
+import { EventsModule } from './events/events.module.js';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [EventsModule, TypeOrmModule.forRoot({
     type: 'postgres',
     host: 'localhost',
     port: 5432,
@@ -19,6 +20,7 @@ import { AnnouncementsModule } from './announcements/announcements.module.js';
     synchronize: true,
   }),
     AnnouncementsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
