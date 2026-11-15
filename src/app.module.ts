@@ -13,7 +13,7 @@ import { AnnouncementsModule } from './announcements/announcements.module.js';
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: 'anoy',
+    password: 'avoy',
     database: 'Club-Management',
     autoLoadEntities: true,
     synchronize: true,

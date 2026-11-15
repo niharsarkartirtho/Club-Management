@@ -1,18 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+} from 'typeorm';
 
 @Entity('announcements')
 export class Announcement {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @Column({ name: 'club_id', type: 'uuid' })
-    clubId: string;
+    @Column({ name: 'club_id', type: 'int', nullable: true })
+    clubId: number | null;
 
-    @Column({ name: 'event_id', type: 'uuid', nullable: true })
-    eventId: string | null;
+    @Column({ name: 'event_id', type: 'int', nullable: true })
+    eventId: number | null;
 
-    @Column({ name: 'author_id', type: 'int' })
-    authorId: number;
+    @Column({ name: 'author_id', type: 'int', nullable: true })
+    authorId: number | null;
 
     @Column()
     title: string;

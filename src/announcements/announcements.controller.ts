@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe, Query, HttpCode, HttpStatus } from '@nestjs/common';
 
 import { AnnouncementsService } from './announcements.service.js';
 import { CreateAnnouncementDto } from './dto/create-announcement.dto.js';
@@ -11,27 +11,41 @@ export class AnnouncementsController {
     ) { }
 
     @Post()
+    @HttpCode(HttpStatus.CREATED)
     create(@Body() dto: CreateAnnouncementDto) {
         return this.announcementsService.create(dto);
     }
 
     @Get()
-    findAll() {
-        return this.announcementsService.findAll();
+    @HttpCode(HttpStatus.OK)
+    findAll(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+    ) {
+        return this.announcementsService.findAll(
+            Number(page),
+            Number(limit),
+        );
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
+    @HttpCode(HttpStatus.OK)
+    findOne(@Param('id', ParseIntPipe) id: number) {
         return this.announcementsService.findOne(id);
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() dto: UpdateAnnouncementDto) {
+    @HttpCode(HttpStatus.OK)
+    update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: UpdateAnnouncementDto,
+    ) {
         return this.announcementsService.update(id, dto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
+    @HttpCode(HttpStatus.OK)
+    remove(@Param('id', ParseIntPipe) id: number) {
         return this.announcementsService.remove(id);
     }
 }

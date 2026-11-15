@@ -1,24 +1,23 @@
-import {
-    IsString,
-    IsUUID,
-    IsOptional,
-    IsInt,
-} from 'class-validator';
+import { IsString, IsOptional, IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateAnnouncementDto {
-    @IsUUID()
-    clubId: string;
+    @IsOptional()
+    @IsInt()
+    clubId?: number;
 
     @IsOptional()
-    @IsUUID()
-    eventId?: string;
-
     @IsInt()
-    authorId: number;
+    eventId?: number;
+
+    @IsOptional()
+    @IsInt()
+    authorId?: number;
 
     @IsString()
+    @IsNotEmpty()
     title: string;
 
     @IsString()
+    @IsNotEmpty()
     body: string;
 }
