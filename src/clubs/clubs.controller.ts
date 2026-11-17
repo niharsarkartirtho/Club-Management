@@ -19,6 +19,12 @@ export class ClubsController {
     return this.clubsService.create(userID, body);
   }
 
+    @Get(':id')
+      findOne(@Param('id', ParseIntPipe) clubId: number) {
+      return this.clubsService.findOneClubById(clubId);
+    }
+
+
 
   @Get()
   findAllClub(@Query() query: ListClubsDto, @Req() req: AuthRequest) {
@@ -33,7 +39,6 @@ export class ClubsController {
   ) {
     return this.clubsService.updateClub(req.user, clubId, body);
   }
-
 
 
 

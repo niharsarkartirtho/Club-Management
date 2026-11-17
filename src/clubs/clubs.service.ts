@@ -41,6 +41,19 @@ export class ClubsService {
   }
 
 
+
+  async findOneClubById(id: number) {
+    const club = await this.clubRepo.findOne({
+      where: {id},
+      relations: { createdBy: true},
+    });
+    if (!club) {
+      throw new NotFoundException('Club Not Found');
+    }
+    return club;
+  }
+
+
   async findAllClubs(query: ListClubsDto) {
     const page = query.page || 1;
     const limit = query.limit || 10;
@@ -81,7 +94,7 @@ export class ClubsService {
         joinedAt: new Date(),
       };
 
-      const club = await this.clubRepo.findOne({ where: { id: clubId } });
+      const club = await this.findOneClubById(clubId)
       if (!club) {
         throw new NotFoundException('Club not found');
       }
@@ -110,6 +123,9 @@ export class ClubsService {
 
       return this.clubRepo.save(club);
     }
+
+
+
 
 
 
