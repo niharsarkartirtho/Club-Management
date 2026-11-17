@@ -13,6 +13,23 @@ export class ClubsController {
   constructor(private readonly clubsService: ClubsService) {}
 
 
+
+  @Get('pending')
+  findPending(@Query() query: ListClubsDto, @Req() req: AuthRequest) {
+    query.status='PENDING'
+    return this.clubsService.findAllClubs(query)
+  }
+
+  @Patch('status/:id')
+  changeClubStatus(
+    @Param('id', ParseIntPipe) clubId: number,
+    @Body() reqBody: UpdateClubDto,
+    @Req() req: AuthRequest,
+  ) {
+    return this.clubsService.updateClubStatus(req.user, clubId, {status: reqBody.status});
+  }
+
+
   @Post()
   create(@Body() body: CreateClubDto, @Req() req: AuthRequest) {
     let userID=  req.user.sub;
@@ -47,6 +64,7 @@ export class ClubsController {
   remove(@Param('id', ParseIntPipe) clubId: number, @Req() req: AuthRequest,) {
     return this.clubsService.removeClub(clubId, req.user);
   }
+
 
 
 

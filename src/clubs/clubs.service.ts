@@ -56,6 +56,7 @@ export class ClubsService {
   }
 
 
+
   async findAllClubs(query: ListClubsDto) {
     const page = query.page || 1;
     const limit = query.limit || 10;
@@ -81,6 +82,35 @@ export class ClubsService {
     });
 
     return { items, total, page, limit };
+  }
+
+
+  async updateClubStatus(user: AuthUser, clubId: number, body: UpdateClubDto) {
+
+    const membership = {
+      id: 1,
+      userId: 2,
+      clubId: 1,
+      role: 'PRESIDENT',
+      status: 'ACTIVE',
+      joinedAt: new Date(),
+    };
+
+    const club = await this.findOneClubById(clubId)
+    if (!club) {
+      throw new NotFoundException('Club not found');
+    }
+
+    if (membership.userId !== user.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
+      throw new ForbiddenException('Only President can Modify Club');
+    }
+
+
+    if(body.status){
+      club.status = body.status
+    }
+
+    return this.clubRepo.save(club);
   }
 
 
@@ -121,7 +151,10 @@ export class ClubsService {
       if (body.description) {
         club.description = body.description;}
       if (body.category) {
-        club.category = body.category;}
+        club.category = body.category    }
+      if(body.status){
+        club.status = body.status
+      }
 
       return this.clubRepo.save(club);
     }
