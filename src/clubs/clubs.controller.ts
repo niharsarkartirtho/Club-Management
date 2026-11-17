@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ClubsService } from './clubs.service.js';
 import { CreateClubDto } from './dto/create-club.dto.js';
 //import { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
@@ -38,6 +38,14 @@ export class ClubsController {
     @Req() req: AuthRequest,
   ) {
     return this.clubsService.updateClub(req.user, clubId, body);
+  }
+
+
+
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) clubId: number, @Req() req: AuthRequest,) {
+    return this.clubsService.removeClub(clubId, req.user);
   }
 
 

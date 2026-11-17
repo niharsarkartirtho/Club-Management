@@ -6,12 +6,14 @@ import { ILike, Repository } from 'typeorm';
 import { ListClubsDto } from './dto/list-clubs.dto.js';
 import { UpdateClubDto } from './dto/update-club.dto.js';
 import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
+import { User } from '../users/entites/user.entity.js';
 
 @Injectable()
 export class ClubsService {
 
   constructor(
     @InjectRepository(Club) private readonly clubRepo: Repository<Club>,
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
 
 
@@ -126,6 +128,33 @@ export class ClubsService {
 
 
 
+  async removeClub(clubId: number, body: AuthUser) {
+
+
+    const membership = {
+      id: 1,
+      userId: 2,
+      clubId: 2,
+      role: 'PRESIDENT',
+      status: 'ACTIVE',
+      joinedAt: new Date(),
+    };
+
+    const club = await this.findOneClubById(clubId)
+    if (!club) {
+      throw new NotFoundException('Club Not Found');
+    }
+
+
+    if (membership.userId !== body.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
+      throw new ForbiddenException('Only President can Delete Club');
+    }
+
+
+    await this.clubRepo.remove(club);
+    return { msg: 'Club Deleted' };
+
+  }
 
 
 
