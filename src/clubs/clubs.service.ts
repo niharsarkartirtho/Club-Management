@@ -1,9 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Club } from './entities/club.entity.js';
 import { ILike, Repository } from 'typeorm';
 import { ListClubsDto } from './dto/list-clubs.dto.js';
+import { UpdateClubDto } from './dto/update-club.dto.js';
+import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
 
 @Injectable()
 export class ClubsService {
@@ -65,6 +67,50 @@ export class ClubsService {
 
     return { items, total, page, limit };
   }
+
+
+
+  async updateClub(user: AuthUser, clubId: number, body: UpdateClubDto) {
+
+      const membership = {
+        id: 1,
+        userId: 2,
+        clubId: 1,
+        role: 'PRESIDENT',
+        status: 'ACTIVE',
+        joinedAt: new Date(),
+      };
+
+      const club = await this.clubRepo.findOne({ where: { id: clubId } });
+      if (!club) {
+        throw new NotFoundException('Club not found');
+      }
+
+      if (membership.userId !== user.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
+        throw new ForbiddenException('Only President can Modify Club');
+      }
+
+
+      if (body.name !== club.name) {
+        const nameUsed = await this.clubRepo.findOne({
+          where: { name: body.name },
+        });
+
+        if (nameUsed) {
+          throw new ConflictException('This Club Name Already Exists');
+        }
+      }
+
+      if (body.name) {
+        club.name = body.name;}
+      if (body.description) {
+        club.description = body.description;}
+      if (body.category) {
+        club.category = body.category;}
+
+      return this.clubRepo.save(club);
+    }
+
 
 
 
