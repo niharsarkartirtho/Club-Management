@@ -1,4 +1,4 @@
-import { Controller,UseGuards, Get, Req,Patch,Body,Param,ParseIntPipe,Delete } from '@nestjs/common';
+import { Controller,UseGuards, Get, Req,Patch,Body,Param,ParseIntPipe,Delete,Query } from '@nestjs/common';
 import { UsersService } from './users.service.js';
 import type { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { UpdateProfileDto } from './dto/update-profile.dto.js';
@@ -7,6 +7,7 @@ import { RolesGuard } from '../auth/jwt-auth/roles.guard.js';
 import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { Roles } from '../auth/jwt-auth/roles.decorator.js';
 import { ChangeRoleDto } from './dto/change-role.dto.js';
+import { SearchUsersDto } from './dto/search-users.dto.js';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
@@ -45,5 +46,11 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Roles('ADMIN')
+  @Get()
+  findAll(@Query() query: SearchUsersDto) {
+    return this.usersService.findAll(query);
   }
 }
