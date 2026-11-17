@@ -2,7 +2,8 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Club } from './entities/club.entity.js';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
+import { ListClubsDto } from './dto/list-clubs.dto.js';
 
 @Injectable()
 export class ClubsService {
@@ -38,7 +39,32 @@ export class ClubsService {
   }
 
 
+  async findAllClubs(query: ListClubsDto) {
+    const page = query.page || 1;
+    const limit = query.limit || 10;
 
+    let status = query.status
+
+    if(!status){
+      status = 'ACTIVE'
+    }
+    const where: any = { status: status };
+    if (query.search) {
+      where.name = ILike(`%${query.search}%`);
+    }
+    if (query.category) {
+      where.category = query.category;
+    }
+
+    const [items, total] = await this.clubRepo.findAndCount({
+      where: where,
+      order: { name: 'ASC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { items, total, page, limit };
+  }
 
 
 
