@@ -6,8 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../../users/entites/user.entity';
-
+import { User } from '../../users/entites/user.entity.js';
 
 
 @Entity('clubs')

@@ -14,6 +14,11 @@ export class CreateClubDto {
 
 
   @IsString()
+  @IsOptional()
+  status: string;
+
+
+  @IsString()
   @IsNotEmpty()
   category: string;
 
