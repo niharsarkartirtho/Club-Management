@@ -6,6 +6,7 @@ export type AuthUser = {
     email:string;
     role:string;
 };
+
 export type AuthRequest ={ user:AuthUser;};
 
 @Injectable()
