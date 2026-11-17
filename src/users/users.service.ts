@@ -1,11 +1,12 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entites/user.entity.js';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { UpdateProfileDto } from './dto/update-profile.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
 import * as bcrypt from 'bcrypt';
 import { ChangeRoleDto } from './dto/change-role.dto.js';
+import { SearchUsersDto } from './dto/search-users.dto.js';
 
 @Injectable()
 export class UsersService {
@@ -92,6 +93,28 @@ export class UsersService {
 
         await this.userRepo.remove(user);
         return { message: 'user deleted' };
+    }
+
+    async findAll(query: SearchUsersDto) {
+        const page = query.page || 1;
+        const limit = query.limit || 10;
+
+        let where = {};
+        if (query.search) {
+            where = [
+                { name: ILike(`%${query.search}%`) },
+                { email: ILike(`%${query.search}%`) },
+            ];
+        }
+
+        const [items, total] = await this.userRepo.findAndCount({
+            where: where,
+            order: { createdAt: 'DESC' },
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        return { items, total, page, limit };
     }
     
 
