@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MembershipsModule } from './memberships/memberships.module.js';
 import { AttendanceModule } from './attendance/attendance.module.js';
+import { VenuesModule } from './venues/venues.module.js';
 @Module({
   imports: [UsersModule, AuthModule, AttendanceModule,
     ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { AttendanceModule } from './attendance/attendance.module.js';
       }),
     }),
     MembershipsModule,
+    VenuesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
