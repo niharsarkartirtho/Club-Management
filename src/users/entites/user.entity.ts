@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
 import { Membership } from '../../memberships/entities/membership.entity.js';
 import type { Relation } from 'typeorm';
+import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
 export enum Role {
   ADMIN = 'ADMIN',
   STUDENT = 'STUDENT',
@@ -36,5 +37,8 @@ export class User {
 
   @OneToMany(() => Membership, (mem) => mem.user)
   memberships: Relation<Membership[]>;
+
+  @OneToMany(() => Registration, (r) => r.user)
+  registrations: Registration[];
 
 }

@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
 
 export enum EventStatus {
     DRAFT = 'DRAFT',
@@ -61,4 +62,8 @@ export class Event {
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
+
+
+    @OneToMany(() => Registration, (r) => r.event)
+    registrations: Registration[];
 }
