@@ -1,6 +1,5 @@
 
 import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
-import { MembershipsService } from '../memberships/memberships.service.js';
 import { EventsService } from '../events/events.service.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Registration } from './entities/event-registration.entity.js';
@@ -51,6 +50,8 @@ export class EventRegistrationsService {
       order: { registeredAt: 'DESC' },
     });
   }
+
+
 
 
 }
