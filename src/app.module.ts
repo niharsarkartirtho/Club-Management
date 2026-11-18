@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AttendanceModule } from './attendance/attendance.module.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -19,6 +20,7 @@ import { AttendanceModule } from './attendance/attendance.module.js';
     synchronize: true,
   }),
     AttendanceModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
