@@ -5,30 +5,24 @@ import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClubsModule } from './clubs/clubs.module.js';
+import { AttendanceModule } from './attendance/attendance.module.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
 
 @Module({
-  imports: [UsersModule, AuthModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config:ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USER'),
-        password: config.get<string>('DB_PASS'),
-        database: config.get<string>('DB_NAME'),
-        autoLoadEntities: true,
-        synchronize: true,
-    }),
+  imports: [TypeOrmModule.forRoot({
+    type: 'postgres',
+    host: 'localhost',
+    port: 5432,
+    username: 'postgres',
+    password: 'anoy',
+    database: 'Club-Management',
+    autoLoadEntities: true,
+    synchronize: true,
   }),
-    ClubsModule,
+    AttendanceModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
