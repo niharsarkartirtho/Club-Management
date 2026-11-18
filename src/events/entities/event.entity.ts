@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, JoinCo
 import { Venue } from '../../venues/entites/venue.entity.js';
 import { User } from '../../users/entites/user.entity.js';
 import { Club } from '../../clubs/entities/club.entity.js';
+import type { Relation } from 'typeorm';
 
 export enum EventStatus {
     DRAFT = 'DRAFT',
@@ -23,15 +24,15 @@ export class Event {
 
     @ManyToOne(() => Club, (c) => c.events, { onDelete: 'RESTRICT' })
     @JoinColumn({ name: 'club_id' })
-    club: Club;
+    club: Relation<Club>;
 
     @ManyToOne(() => Venue, (v) => v.events, { onDelete: 'RESTRICT' })
     @JoinColumn({ name: 'venue_id' })
-    venue: Venue;
+    venue: Relation<Venue>;
 
     @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
     @JoinColumn({ name: 'author_id' })
-    author: User;
+    author: Relation<User>;
 
     @Column()
     title: string;

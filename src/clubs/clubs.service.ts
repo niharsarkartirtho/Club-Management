@@ -87,23 +87,12 @@ export class ClubsService {
 
   async updateClubStatus(user: AuthUser, clubId: number, body: UpdateClubDto) {
 
-    const membership = {
-      id: 1,
-      userId: 2,
-      clubId: 1,
-      role: 'PRESIDENT',
-      status: 'ACTIVE',
-      joinedAt: new Date(),
-    };
 
     const club = await this.findOneClubById(clubId)
     if (!club) {
       throw new NotFoundException('Club not found');
     }
 
-    if (membership.userId !== user.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
-      throw new ForbiddenException('Only President can Modify Club');
-    }
 
 
     if(body.status){

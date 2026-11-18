@@ -6,7 +6,10 @@ import {
     JoinColumn,
     ManyToOne,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Club } from '../../clubs/entities/club.entity.js';
+import { Event } from '../../events/entities/event.entity.js';
+import { User } from '../../users/entites/user.entity.js';
 
 @Entity('announcements')
 export class Announcement {
@@ -15,16 +18,16 @@ export class Announcement {
 
     @ManyToOne(() => Club, (c) => c.announcements, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'club_id' })
-    club: Club;
+    club: Relation<Club>;
 
-    @Column({ name: 'club_id', type: 'int', nullable: true })
-    clubId: number | null;
+    @ManyToOne(() => Event, { nullable: true, onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'event_id' })
+    event: Relation<Event | null>;
 
-    @Column({ name: 'event_id', type: 'int', nullable: true })
-    eventId: number | null;
-
-    @Column({ name: 'author_id', type: 'int', nullable: true })
-    authorId: number | null;
+    
+    @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'author_id' })
+    author: Relation<User>;
 
     @Column()
     title: string;
