@@ -29,8 +29,8 @@ export class EventsService {
         this.validateEventDates(startTime, endTime);
         const event = this.eventRepository.create({
             ...dto,
-            startTime: new Date(dto.startTime),
-            endTime: new Date(dto.endTime),
+            startTime,
+            endTime
         });
 
         return await this.eventRepository.save(event);
