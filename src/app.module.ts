@@ -8,8 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MembershipsModule } from './memberships/memberships.module.js';
 import { EventRegistrationsModule } from './event-registrations/event-registrations.module.js';
 
+import { AttendanceModule } from './attendance/attendance.module.js';
+import { VenuesModule } from './venues/venues.module.js';
 @Module({
-  imports: [UsersModule, AuthModule,
+  imports: [UsersModule, AuthModule, AttendanceModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -29,6 +31,7 @@ import { EventRegistrationsModule } from './event-registrations/event-registrati
     }),
     MembershipsModule,
     EventRegistrationsModule,
+    VenuesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

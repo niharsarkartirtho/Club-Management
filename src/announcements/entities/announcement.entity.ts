@@ -3,12 +3,19 @@ import {
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
+    JoinColumn,
+    ManyToOne,
 } from 'typeorm';
+import { Club } from '../../clubs/entities/club.entity.js';
 
 @Entity('announcements')
 export class Announcement {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @ManyToOne(() => Club, (c) => c.announcements, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'club_id' })
+    club: Club;
 
     @Column({ name: 'club_id', type: 'int', nullable: true })
     clubId: number | null;

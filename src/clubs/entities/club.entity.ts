@@ -9,6 +9,8 @@ import {
 import { User } from '../../users/entites/user.entity.js';
 import { Membership } from '../../memberships/entities/membership.entity.js';
 import type { Relation } from 'typeorm';
+import { Announcement } from '../../announcements/entities/announcement.entity.js';
+import { Event } from '../../events/entities/event.entity.js';
 
 @Entity('clubs')
 export class Club {
@@ -40,5 +42,10 @@ export class Club {
   @OneToMany(() => Membership, (MEM) => MEM.club)
   memberships: Membership[];
 
+  @OneToMany(() => Event, (e) => e.club)
+  events: Event[];
+
+  @OneToMany(() => Announcement, (a) => a.club)
+  announcements: Announcement[];
 
 }

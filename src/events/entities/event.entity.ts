@@ -1,5 +1,9 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
 import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Venue } from '../../venues/entites/venue.entity.js';
+import { User } from '../../users/entites/user.entity.js';
+import { Club } from '../../clubs/entities/club.entity.js';
 
 export enum EventStatus {
     DRAFT = 'DRAFT',
@@ -19,17 +23,17 @@ export class Event {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // Will be connected to Club entity after merging
-    @Column({ name: 'club_id', type: 'int', nullable: true })
-    clubId: number | null;
+    @ManyToOne(() => Club, (c) => c.events, { onDelete: 'RESTRICT' })
+    @JoinColumn({ name: 'club_id' })
+    club: Club;
 
-    // Will be connected to Venue entity after merging
-    @Column({ name: 'venue_id', type: 'int', nullable: true })
-    venueId: number | null;
+    @ManyToOne(() => Venue, (v) => v.events, { onDelete: 'RESTRICT' })
+    @JoinColumn({ name: 'venue_id' })
+    venue: Venue;
 
-    // Will be connected to User entity after merging
-    @Column({ name: 'created_by', type: 'int', nullable: true })
-    createdById: number | null;
+    @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'author_id' })
+    author: User;
 
     @Column()
     title: string;
