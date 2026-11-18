@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MembershipsModule } from './memberships/memberships.module.js';
 
 @Module({
   imports: [UsersModule, AuthModule,
@@ -25,6 +26,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+    MembershipsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
