@@ -6,9 +6,9 @@ import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MembershipsModule } from './memberships/memberships.module.js';
-
+import { AttendanceModule } from './attendance/attendance.module.js';
 @Module({
-  imports: [UsersModule, AuthModule,
+  imports: [UsersModule, AuthModule, AttendanceModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
