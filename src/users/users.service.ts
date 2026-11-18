@@ -104,6 +104,7 @@ export class UsersService {
             where = [
                 { name: ILike(`%${query.search}%`) },
                 { email: ILike(`%${query.search}%`) },
+                { studentId: ILike(`%${query.search}%`) },
             ];
         }
 
