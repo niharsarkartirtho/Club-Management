@@ -1,7 +1,8 @@
-import { Body, Controller, Param, ParseIntPipe, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { MembershipsService } from './memberships.service.js';
 import type { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard.js';
+import { ListMembersDto } from './dto/list-members.dto.js';
 
 
 @UseGuards(JwtAuthGuard)
@@ -11,15 +12,25 @@ export class MembershipsController {
 
 
 
-
   @Post(':clubId/join')
   async createMember(
     @Req() req: AuthRequest,
     @Param('clubId', ParseIntPipe) clubId: number,
-    @Body() body: { status: string, clubRole: string},
+    @Body() body: ListMembersDto,
   ) {
-    return this.membershipsService.createMember(req.user, clubId, body.status, body.clubRole);
+    return this.membershipsService.createMember(req.user, clubId, body.status, body.clubRole,);
   }
+
+
+
+  @Get('filter/:clubId')
+  async filterMember(
+    @Param('clubId', ParseIntPipe) clubId: number,
+    @Query() filters: ListMembersDto,
+  ) {
+    return this.membershipsService.filterMember(clubId, filters);
+  }
+
 
 
 

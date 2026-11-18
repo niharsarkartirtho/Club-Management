@@ -1,9 +1,11 @@
-
-
-import {IsOptional } from 'class-validator';
-
+import {  IsString } from 'class-validator';
 
 export class ListMembersDto {
-  @IsOptional()
-  role?: string;
+
+  @IsString()
+  clubRole: string;
+
+
+  @IsString()
+  status: string;
 }

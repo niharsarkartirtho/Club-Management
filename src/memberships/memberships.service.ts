@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { Club } from '../clubs/entities/club.entity.js';
+import { ListMembersDto } from './dto/list-members.dto.js';
 
 @Injectable()
 export class MembershipsService {
@@ -57,10 +58,24 @@ export class MembershipsService {
 
 
 
-  async filterMember(){
+  async filterMember(clubId: number, filters: ListMembersDto) {
+    await this.findClubOrFail(clubId);
 
+    return this.membershipRepo.find({
+      where: {
+        club: { id: clubId },
+        ...(filters.clubRole && { clubRole: filters.clubRole }),
+        ...(filters.status && { status: filters.status }),
+      },
+      relations: {
+        user: true,
+        club: true
+      },
+      order: {
+        joinedAt: 'DESC',
+      },
+    });
   }
-
 
 
 
