@@ -1,10 +1,17 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    type Relation,
+} from 'typeorm';
 import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { Venue } from '../../venues/entites/venue.entity.js';
-import { User } from '../../users/entites/user.entity.js';
+import { Venue } from '../../venues/entites/venue.entity.js'; 
 import { Club } from '../../clubs/entities/club.entity.js';
-import type { Relation } from 'typeorm';
+import { User } from '../../users/entites/user.entity.js';
 
 export enum EventStatus {
     DRAFT = 'DRAFT',
