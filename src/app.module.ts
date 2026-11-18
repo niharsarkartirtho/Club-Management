@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MembershipsModule } from './memberships/memberships.module.js';
+import { EventRegistrationsModule } from './event-registrations/event-registrations.module.js';
+
 import { AttendanceModule } from './attendance/attendance.module.js';
 import { VenuesModule } from './venues/venues.module.js';
 @Module({
@@ -28,6 +30,7 @@ import { VenuesModule } from './venues/venues.module.js';
       }),
     }),
     MembershipsModule,
+    EventRegistrationsModule,
     VenuesModule,
   ],
   controllers: [AppController],

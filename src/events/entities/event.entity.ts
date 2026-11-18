@@ -1,3 +1,5 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, OneToMany } from 'typeorm';
+import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { Venue } from '../../venues/entites/venue.entity.js';
 import { User } from '../../users/entites/user.entity.js';
@@ -64,4 +66,8 @@ export class Event {
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
+
+
+    @OneToMany(() => Registration, (r) => r.event)
+    registrations: Registration[];
 }
