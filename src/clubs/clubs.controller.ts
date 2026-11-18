@@ -6,6 +6,7 @@ import type { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { ListClubsDto } from './dto/list-clubs.dto.js';
 import { UpdateClubDto } from './dto/update-club.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard.js';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard)
 @Controller('clubs')
@@ -14,12 +15,22 @@ export class ClubsController {
 
 
 
+  @ApiOperation({ summary: 'List clubs pending approval' })
   @Get('pending')
   findPending(@Query() query: ListClubsDto, @Req() req: AuthRequest) {
     query.status='PENDING'
     return this.clubsService.findAllClubs(query)
   }
 
+  @ApiOperation({ summary: 'Update a club status' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', example: 'ACTIVE' },
+      },
+    },
+  })
   @Patch('status/:id')
   changeClubStatus(
     @Param('id', ParseIntPipe) clubId: number,
@@ -30,12 +41,26 @@ export class ClubsController {
   }
 
 
+  @ApiOperation({ summary: 'Create a club' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'category'],
+      properties: {
+        name: { type: 'string', minLength: 3, example: 'AIUB Programming Club' },
+        description: { type: 'string', example: 'A club for programming enthusiasts' },
+        status: { type: 'string', example: 'PENDING' },
+        category: { type: 'string', example: 'Technology' },
+      },
+    },
+  })
   @Post()
   create(@Body() body: CreateClubDto, @Req() req: AuthRequest) {
     let userID=  req.user.sub;
     return this.clubsService.create(userID, body);
   }
 
+    @ApiOperation({ summary: 'Get a club by ID' })
     @Get(':id')
       findOne(@Param('id', ParseIntPipe) clubId: number) {
       return this.clubsService.findOneClubById(clubId);
@@ -43,11 +68,24 @@ export class ClubsController {
 
 
 
+  @ApiOperation({ summary: 'List clubs with optional filters' })
   @Get()
   findAllClub(@Query() query: ListClubsDto, @Req() req: AuthRequest) {
     return this.clubsService.findAllClubs(query);
   }
 
+  @ApiOperation({ summary: 'Update a club' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', minLength: 3, example: 'AIUB Programming Club' },
+        description: { type: 'string', example: 'A club for programming enthusiasts' },
+        status: { type: 'string', example: 'ACTIVE' },
+        category: { type: 'string', example: 'Technology' },
+      },
+    },
+  })
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) clubId: number,
@@ -60,15 +98,9 @@ export class ClubsController {
 
 
 
+  @ApiOperation({ summary: 'Delete a club' })
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) clubId: number, @Req() req: AuthRequest,) {
     return this.clubsService.removeClub(clubId, req.user);
   }
-
-
-
-
-
-
-
 }

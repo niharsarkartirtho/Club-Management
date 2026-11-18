@@ -10,6 +10,9 @@ import { EventRegistrationsModule } from './event-registrations/event-registrati
 
 import { AttendanceModule } from './attendance/attendance.module.js';
 import { VenuesModule } from './venues/venues.module.js';
+import { ClubsModule } from './clubs/clubs.module.js';
+import { EventsModule } from './events/events.module.js';
+import { AnnouncementsModule } from './announcements/announcements.module.js';
 @Module({
   imports: [UsersModule, AuthModule, AttendanceModule,
     ConfigModule.forRoot({
@@ -32,6 +35,9 @@ import { VenuesModule } from './venues/venues.module.js';
     MembershipsModule,
     EventRegistrationsModule,
     VenuesModule,
+    ClubsModule,
+    EventsModule,
+    AnnouncementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
