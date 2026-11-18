@@ -1,16 +1,4 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Put,
-    Delete,
-    Body,
-    Param,
-    Query,
-    ParseIntPipe,
-    HttpCode,
-    HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, ParseIntPipe, HttpCode, HttpStatus } from '@nestjs/common';
 
 import { EventsService } from './events.service.js';
 import { CreateEventDto } from './dto/create-event.dto.js';
