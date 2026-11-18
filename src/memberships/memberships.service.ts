@@ -9,7 +9,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { Club } from '../clubs/entities/club.entity.js';
-import { ListMembersDto } from './dto/list-members.dto.js';
+import { CreateMembershipDto } from './dto/create-membership.dto.js';
+import { UpdateMembershipDto } from './dto/update-membership.dto.js';
 
 @Injectable()
 export class MembershipsService {
@@ -58,7 +59,7 @@ export class MembershipsService {
 
 
 
-  async filterMember(clubId: number, filters: ListMembersDto) {
+  async filterMember(clubId: number, filters: CreateMembershipDto) {
     await this.findClubOrFail(clubId);
 
     return this.membershipRepo.find({
@@ -75,6 +76,25 @@ export class MembershipsService {
         joinedAt: 'DESC',
       },
     });
+  }
+
+
+
+  async updateMember(membershipId: number, body: UpdateMembershipDto) {
+    const membership = await this.membershipRepo.findOne({
+      where: { id: membershipId }
+    });
+
+    if (!membership) {
+      throw new NotFoundException('Membership Not Found');
+    }
+
+    if (!body.status && !body.clubRole) {
+      throw new BadRequestException('At Least One Field is Required');
+    }
+
+    Object.assign(membership, body);
+      return await this.membershipRepo.save(membership);
   }
 
 

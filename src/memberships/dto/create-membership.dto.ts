@@ -1,6 +1,6 @@
 import {  IsString } from 'class-validator';
 
-export class ListMembersDto {
+export class CreateMembershipDto {
 
   @IsString()
   clubRole: string;
