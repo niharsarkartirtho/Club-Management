@@ -3,11 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/entites/user.entity.js';
-
+import { Membership } from '../../memberships/entities/membership.entity.js';
+import type { Relation } from 'typeorm';
 
 @Entity('clubs')
 export class Club {
@@ -30,9 +31,14 @@ export class Club {
   createdAt: Date;
 
 
-  @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
+
+
+  @ManyToOne(() => User, {onDelete: 'SET NULL' })
   @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  createdBy: Relation<User>;
+
+  @OneToMany(() => Membership, (MEM) => MEM.club)
+  memberships: Membership[];
 
 
 }
