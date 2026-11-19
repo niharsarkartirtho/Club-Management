@@ -13,8 +13,11 @@ import { VenuesModule } from './venues/venues.module.js';
 import { ClubsModule } from './clubs/clubs.module.js';
 import { EventsModule } from './events/events.module.js';
 import { AnnouncementsModule } from './announcements/announcements.module.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
+
 @Module({
-  imports: [UsersModule, AuthModule, AttendanceModule,
+  imports: [UsersModule, AuthModule, AttendanceModule, EventsModule,
+    AnnouncementsModule, AnalyticsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
