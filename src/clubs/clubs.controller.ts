@@ -57,7 +57,7 @@ export class ClubsController {
   @Post()
   create(@Body() body: CreateClubDto, @Req() req: AuthRequest) {
     let userID=  req.user.sub;
-    return this.clubsService.create(userID, body);
+    return this.clubsService.create(userID, body, req);
   }
 
     @ApiOperation({ summary: 'Get a club by ID' })

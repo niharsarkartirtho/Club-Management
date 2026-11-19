@@ -4,9 +4,10 @@ import { ClubsController } from './clubs.controller.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Club } from './entities/club.entity.js';
 import { User } from '../users/entites/user.entity.js';
+import { Membership } from '../memberships/entities/membership.entity.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Club,User])],
+  imports: [TypeOrmModule.forFeature([Club,User, Membership])],
   controllers: [ClubsController],
   providers: [ClubsService],
 })
