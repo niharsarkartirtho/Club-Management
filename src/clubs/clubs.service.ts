@@ -5,8 +5,9 @@ import { Club } from './entities/club.entity.js';
 import { ILike, Repository } from 'typeorm';
 import { ListClubsDto } from './dto/list-clubs.dto.js';
 import { UpdateClubDto } from './dto/update-club.dto.js';
-import { AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
+import { AuthRequest, AuthUser } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { User } from '../users/entites/user.entity.js';
+import { Membership } from '../memberships/entities/membership.entity.js';
 
 @Injectable()
 export class ClubsService {
@@ -14,11 +15,13 @@ export class ClubsService {
   constructor(
     @InjectRepository(Club) private readonly clubRepo: Repository<Club>,
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Membership) private readonly membershipRepo: Repository<Membership>,
+
   ) {}
 
 
 
-  async create(userId: number, body: CreateClubDto) {
+  async create(userId: number, body: CreateClubDto, req: AuthRequest) {
 
     const existClub = await this.clubRepo.findOne({ where: { name: body.name } });
 
@@ -35,10 +38,19 @@ export class ClubsService {
     });
     const savedClub = await this.clubRepo.save(club);
 
+    const membership = this.membershipRepo.create({
+      user: { id: req.user.sub },
+      club: { id: savedClub.id },
+      status: 'ACTIVE',
+      clubRole: 'PRESIDENT',
+    });
+
+    const savedMembership = await this.membershipRepo.save(membership);
 
     return {
       message: 'club requested, wait for admin approval',
       club: savedClub,
+      membership: savedMembership,
     };
   }
 
@@ -85,18 +97,26 @@ export class ClubsService {
   }
 
 
+
   async updateClubStatus(user: AuthUser, clubId: number, body: UpdateClubDto) {
 
+    const club = await this.findOneClubById(clubId);
 
-    const club = await this.findOneClubById(clubId)
-    if (!club) {
-      throw new NotFoundException('Club not found');
+    const membership = await this.membershipRepo.findOne({
+      where: {
+        user: { id: user.sub },
+        club: { id: clubId },
+        clubRole: 'PRESIDENT',
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException('Only President can Update Club Status');
     }
 
-
-
-    if(body.status){
-      club.status = body.status
+    if (body.status !== undefined) {
+      club.status = body.status;
     }
 
     return this.clubRepo.save(club);
@@ -106,77 +126,74 @@ export class ClubsService {
 
   async updateClub(user: AuthUser, clubId: number, body: UpdateClubDto) {
 
-      const membership = {
-        id: 1,
-        userId: 2,
-        clubId: 1,
-        role: 'PRESIDENT',
+    const club = await this.findOneClubById(clubId);
+
+    const membership = await this.membershipRepo.findOne({
+      where: {
+        user: { id: user.sub },
+        club: { id: clubId },
+        clubRole: 'PRESIDENT',
         status: 'ACTIVE',
-        joinedAt: new Date(),
-      };
+      },
+    });
 
-      const club = await this.findOneClubById(clubId)
-      if (!club) {
-        throw new NotFoundException('Club not found');
-      }
-
-      if (membership.userId !== user.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
-        throw new ForbiddenException('Only President can Modify Club');
-      }
-
-
-      if (body.name !== club.name) {
-        const nameUsed = await this.clubRepo.findOne({
-          where: { name: body.name },
-        });
-
-        if (nameUsed) {
-          throw new ConflictException('This Club Name Already Exists');
-        }
-      }
-
-      if (body.name) {
-        club.name = body.name;}
-      if (body.description) {
-        club.description = body.description;}
-      if (body.category) {
-        club.category = body.category    }
-      if(body.status){
-        club.status = body.status
-      }
-
-      return this.clubRepo.save(club);
+    if (!membership) {
+      throw new ForbiddenException('Only President can Modify Club');
     }
+
+    if (body.name && body.name !== club.name) {
+      const nameUsed = await this.clubRepo.findOne({
+        where: { name: body.name },
+      });
+
+      if (nameUsed) {
+        throw new ConflictException('This Club Name Already Exists');
+      }
+    }
+
+    // Update fields
+    if (body.name !== undefined) {
+      club.name = body.name;
+    }
+
+    if (body.description !== undefined) {
+      club.description = body.description;
+    }
+
+    if (body.category !== undefined) {
+      club.category = body.category;
+    }
+
+    if (body.status !== undefined) {
+      club.status = body.status;
+    }
+
+    return this.clubRepo.save(club);
+  }
 
 
 
   async removeClub(clubId: number, body: AuthUser) {
+    const club = await this.findOneClubById(clubId);
 
+    const membership = await this.membershipRepo.findOne({
+      where: {
+        user: { id: body.sub },
+        club: { id: clubId },
+        clubRole: 'PRESIDENT',
+        status: 'ACTIVE',
+      },
+    });
 
-    const membership = {
-      id: 1,
-      userId: 2,
-      clubId: 2,
-      role: 'PRESIDENT',
-      status: 'ACTIVE',
-      joinedAt: new Date(),
-    };
-
-    const club = await this.findOneClubById(clubId)
-    if (!club) {
-      throw new NotFoundException('Club Not Found');
-    }
-
-
-    if (membership.userId !== body.sub || membership.clubId !== clubId || membership.role !== 'PRESIDENT' || membership.status !== 'ACTIVE') {
+    if (!membership) {
       throw new ForbiddenException('Only President can Delete Club');
     }
 
-
     await this.clubRepo.remove(club);
-    return { msg: 'Club Deleted' };
 
+    return { msg: 'Club Deleted' };
   }
+
 
 
 
