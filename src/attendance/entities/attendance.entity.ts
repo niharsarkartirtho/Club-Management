@@ -1,29 +1,35 @@
-
 import {
     Entity,
     PrimaryGeneratedColumn,
-    Column,
     CreateDateColumn,
+    OneToOne,
+    ManyToOne,
+    JoinColumn,
 } from 'typeorm';
+
+import type { Relation } from 'typeorm';
+
+import { Registration } from '../../event-registrations/entities/event-registration.entity.js';
+import { User } from '../../users/entites/user.entity.js';
 
 @Entity('attendance')
 export class Attendance {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({
-        name: 'registration_id',
-        type: 'varchar',
+    @OneToOne(() => Registration, {
         nullable: true,
+        onDelete: 'CASCADE',
     })
-    registrationId: string;
+    @JoinColumn({ name: 'registration_id' })
+    registration: Relation<Registration>;
 
-    @Column({
-        name: 'checked_in_by',
-        type: 'varchar',
+    @ManyToOne(() => User, {
         nullable: true,
+        onDelete: 'SET NULL',
     })
-    checkedInBy: string;
+    @JoinColumn({ name: 'checked_in_by' })
+    checkedInByUser: Relation<User>;
 
     @CreateDateColumn({
         name: 'checked_in_at',
