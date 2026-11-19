@@ -1,13 +1,14 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ClubsService } from './clubs.service.js';
 import { CreateClubDto } from './dto/create-club.dto.js';
-//import { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
+import { ApiBody, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import type { AuthRequest } from '../auth/jwt-auth/jwt-auth.guard.js';
 import { ListClubsDto } from './dto/list-clubs.dto.js';
 import { UpdateClubDto } from './dto/update-club.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard.js';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('clubs')
 export class ClubsController {
