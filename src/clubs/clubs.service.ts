@@ -48,7 +48,7 @@ export class ClubsService {
     const savedMembership = await this.membershipRepo.save(membership);
 
     return {
-      message: 'club requested, wait for admin approval',
+      message: 'Club Create Success With Role PRESIDENT',
       club: savedClub,
       membership: savedMembership,
     };
