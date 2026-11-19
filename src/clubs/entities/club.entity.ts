@@ -35,7 +35,7 @@ export class Club {
 
 
 
-  @ManyToOne(() => User, {onDelete: 'SET NULL' })
+  @ManyToOne(() => User, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'created_by' })
   createdBy: Relation<User>;
 
@@ -46,6 +46,6 @@ export class Club {
   events: Event[];
 
   @OneToMany(() => Announcement, (a) => a.club)
-  announcements: Announcement[];
+  announcements: Relation<Announcement>[];
 
 }

@@ -24,7 +24,7 @@ export class Announcement {
     @JoinColumn({ name: 'event_id' })
     event: Relation<Event | null>;
 
-    
+
     @ManyToOne(() => User, { nullable: true, onDelete: 'SET NULL' })
     @JoinColumn({ name: 'author_id' })
     author: Relation<User>;
